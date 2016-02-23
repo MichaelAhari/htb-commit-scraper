@@ -44,15 +44,17 @@ def callback():
     """
 
     github = OAuth2Session(client_id, state=session['oauth_state'])
-    token = github.fetch_token(token_url, client_secret=client_secret,
-                               authorization_response=request.url)
+    token = json.load(github.fetch_token(token_url, client_secret=client_secret,
+                               authorization_response=request.url))
 
     # At this point you can fetch protected resources but lets save
     # the token and show how this is done from a persisted token
     # in /profile.
     session['oauth_token'] = token
+
+    #add token to list of tokens
     tokens.append(token)
-    print tokens
+
     return redirect('http://localhost:5000/commits')
 
 @app.route("/commits")
