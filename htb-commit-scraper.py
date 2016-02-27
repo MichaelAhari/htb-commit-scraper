@@ -12,6 +12,10 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 from flask import make_response
 
+#import spotify python api
+import spotipy
+import spotipy.util as util
+
 
 # create application
 app = Flask(__name__)
@@ -86,15 +90,14 @@ def callback():
     """
 
     github = OAuth2Session(client_id, state=session['oauth_state'])
-    token = github.fetch_token(token_url, client_secret=client_secret,
-                               authorization_response=request.url)
+    token = github.fetch_token(token_url, client_secret=client_secret, authorization_response=request.url)
 
     #session['oauth_token'] = token
 
     # At this point you can fetch protected resources but lets save
     # the token and show how this is done from a persisted token
     # in /profile.
-
+    session['oauthkey'] = token
     OAUTH_KEY = token
 
     #authorise user using token
@@ -147,7 +150,7 @@ def commits():
     User.query.filter_by(login=session['login']).delete()
 
 
-    new_record = User(session['login'], token, session['repo'], session['owner'])
+    new_record = User(session['login'], session['oauthkey'], session['repo'], session['owner'])
 
     db.session.add(new_record)
     db.session.commit()
@@ -179,6 +182,19 @@ def commits():
         requests.post(SPOTIFY_BASE_URL + '/v1/users/michaelahari/playlists/5B1sHuZjlgROjT54SjA1i/'+'{"uris": ["spotify:track:0r4SsYcwvd8URat6AS2m6f"]}')
 
     return MESSAGE
+
+@app.route("/spotify", methods=["GET", "POST"])
+def spotify():
+
+
+
+    return ''
+
+@app.route("/spotify-callback", methods=["GET", "POST"])
+def spotify_callback():
+
+    return ''
+
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.secret_key = os.urandom(24)
