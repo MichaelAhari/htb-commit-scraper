@@ -73,7 +73,7 @@ def home():
 
 # Step 2: User authorization, this happens on the provider.
 
-@app.route("/callback", methods=["GET"])
+@app.route("/callback", methods=["GET", "POST"])
 def callback():
 
     #if 'oauth_state' not in request.cookies:
@@ -105,6 +105,7 @@ def callback():
     json_ui = user_info.json()
 
     LOGIN = json_ui['login']
+    session['login'] = LOGIN
 
     #get repos
     repo_info = github.get('https://api.github.com/user/repos')
@@ -122,7 +123,9 @@ def callback():
     for repo in repo_info.json():
         if dateutil.parser.parse(repo['created_at']) == DATE_CREATED:
             REPO = repo['name']
+            session['repo'] = REPO
             OWNER = repo['owner']['login']
+            session['owner'] = OWNER
 
     #add record to database
     new_record = User(LOGIN, OAUTH_KEY, REPO, OWNER)
@@ -136,8 +139,18 @@ def callback():
     response.set_cookie('oauth', 'authorized')
     return response
 
-@app.route("/commits", methods=["GET"])
+@app.route("/commits", methods=["GET", "POST"])
 def commits():
+
+
+    """refreshes token"""
+    User.query.filter_by(login=session['login']).delete()
+
+
+    new_record = User(session['login'], token, session['repo'], session['owner'])
+
+    db.session.add(new_record)
+    db.session.commit()
 
 
     #get all users from database
@@ -158,10 +171,14 @@ def commits():
         #check if commit has been made in the last 5 minutes
         current_date = datetime.datetime.now(pytz.utc)
         if (commit_date - current_date).total_seconds() < (5*60):
-            commit_message = commit['commit']['message']
+            MESSAGE = commit['commit']['message']
 
+        #connect to spotify API
+        SPOTIFY_BASE_URL = 'https://api.spotify.com'
+        TRACK = '2kli84TSRXN5XoGsY75Nan'
+        requests.post(SPOTIFY_BASE_URL + '/v1/users/michaelahari/playlists/5B1sHuZjlgROjT54SjA1i/'+'{"uris": ["spotify:track:0r4SsYcwvd8URat6AS2m6f"]}')
 
-    return commit_message
+    return MESSAGE
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.secret_key = os.urandom(24)
