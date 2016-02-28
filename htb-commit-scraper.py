@@ -190,10 +190,10 @@ def spotify():
 
     return ''
 
-@app.route("/spotify-callback", methods=["GET", "POST"])
+@app.route("/spotifycallback", methods=["GET", "POST"])
 def spotify_callback():
 
-    return ''
+    return 'Success!'
 
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
