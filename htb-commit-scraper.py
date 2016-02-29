@@ -21,7 +21,7 @@ import spotipy.util as util
 app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:frenNi31@178.62.99.27/users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:htbcommitscraper@178.62.99.27/users'
 db.init_app(app)
 
 class User(db.Model):
