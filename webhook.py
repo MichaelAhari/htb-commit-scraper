@@ -204,6 +204,14 @@ def spotify_callback():
 
     return 'Success!'
 
+@app.route("/webhook", methods=["POST"])
+def webhook():
+
+    data = request.json()
+
+    commits = data['commits']
+    message = commits[0]['message']
+
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.secret_key = os.urandom(24)
