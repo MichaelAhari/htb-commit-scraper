@@ -3,6 +3,8 @@ from flask import Flask, request, redirect, g, render_template
 import requests
 import base64
 import urllib
+import schedule
+import time
 
 # Authentication Steps, paramaters, and responses are defined at https://developer.spotify.com/web-api/authorization-guide/
 # Visit this url to see all the steps, parameters, and expected response.
@@ -46,12 +48,12 @@ def index():
     # Auth Step 1: Authorization
     url_args = "&".join(["{}={}".format(key,urllib.quote(val)) for key,val in auth_query_parameters.iteritems()])
     auth_url = "{}/?{}".format(SPOTIFY_AUTH_URL, url_args)
-    print auth_url
     return redirect(auth_url)
 
 
 @app.route("/spotifycallback")
 def callback():
+    
     # Auth Step 4: Requests refresh and access tokens
     auth_token = request.args['code']
     code_payload = {
@@ -69,6 +71,7 @@ def callback():
     refresh_token = response_data["refresh_token"]
     token_type = response_data["token_type"]
     expires_in = response_data["expires_in"]
+    print expires_in
 
     # Auth Step 6: Use the access token to access Spotify API
     authorization_header = {"Authorization":"Bearer {}".format(access_token)}
