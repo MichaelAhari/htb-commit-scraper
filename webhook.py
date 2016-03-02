@@ -143,7 +143,7 @@ def callback():
 
     json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://localhost:5000/webhook","content_type":"json","insecure_ssl": "1" }}
 
-    create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO), json=json_data)
+    create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' $ (OWNER,REPO), json=json_data)
 
     print create_hook
 
@@ -211,6 +211,7 @@ def webhook():
 
     commits = data['commits']
     message = commits[0]['message']
+    print message
 
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
