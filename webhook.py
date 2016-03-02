@@ -208,7 +208,7 @@ def spotify_callback():
 @app.route("/webhook", methods=["GET","POST"])
 def webhook():
 
-    data = request.json()
+    data = request.data
 
     commits = data['commits']
     message = commits[0]['message']
