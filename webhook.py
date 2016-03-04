@@ -205,15 +205,11 @@ def spotify_callback():
 
     return 'Success!'
 
+
 @app.route("/webhook", methods=["GET","POST"])
 def webhook():
 
-    data = request.data
-
-    commits = data['commits']
-    message = commits[0]['message']
-    print message
-    return ''
+    return 'Worked!'
 
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
