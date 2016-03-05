@@ -23,6 +23,9 @@ app.config.from_object(__name__)
 db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:htbcommitscraper@178.62.99.27/users'
 app.config['DEBUG'] = True
+app.config['SESSION_TYPE'] = 'filesystem'
+app.secret_key = os.urandom(24)
+
 db.init_app(app)
 
 
@@ -199,6 +202,4 @@ def webhook():
 
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    app.config['SESSION_TYPE'] = 'filesystem'
-    app.secret_key = os.urandom(24)
     app.run(debug=True)
