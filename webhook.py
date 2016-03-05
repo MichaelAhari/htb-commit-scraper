@@ -24,17 +24,25 @@ db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:htbcommitscraper@178.62.99.27/users'
 db.init_app(app)
 
+
+from flask.ext.wtf import Form
+from wtforms import StringField, BooleanField
+from wtforms.validators import DataRequired
+
+class LoginForm(Form):
+    reponame = StringField('reponame', validators=[DataRequired()])
+    remember_me = BooleanField('remember_me', default=False)
+
+
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'gitusers'
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(30))
-    oauthkey = db.Column(JSON)
     repo = db.Column(db.String(30))
     owner = db.Column(db.String(30))
 
-    def __init__(self, login, oauthkey, repo, owner):
+    def __init__(self, login, repo, owner):
         self.login = login
-        self.oauthkey = oauthkey
         self.repo = repo
         self.owner = owner
 
@@ -65,92 +73,82 @@ def home():
     Redirect the user/resource owner to the OAuth provider (i.e. Github)
     using an URL with a few key OAuth parameters.
     """
-    github = OAuth2Session(client_id, redirect_uri=redirect_uri, scope = ['write:repo_hook'])
+    #get token and create authorized session
+    github = OAuth2Session(client_id, redirect_uri=redirect_uri, scope = ['write:repo_hook, repo'])
     authorization_url, state = github.authorization_url(authorization_base_url)
-
     # State is used to prevent CSRF, keep this for later
     session['oauth_state'] = state
     return redirect(authorization_url)
-    response = make_response(redirect(authorization_url))
-    response.set_cookie('oauth_state', state)
-    return response
 
 # Step 2: User authorization, this happens on the provider.
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
 
-    #if 'oauth_state' not in request.cookies:
-    #    return redirect(url_for('home'))
-    """ Step 3: Retrieving an access token.
+    """Get REPO name from user"""
+    form = LoginForm()
+    if form.validate_on_submit():
 
-    The user has been redirected back from the provider to your registered
-    callback URL. With this redirection comes an authorization code included
-    in the redirect URL. We will use that to obtain an access token.
-    """
+        """ Step 3: Retrieving an access token.
 
-    github = OAuth2Session(client_id, state=session['oauth_state'])
-    token = github.fetch_token(token_url, client_secret=client_secret, authorization_response=request.url)
+        The user has been redirected back from the provider to your registered
+        callback URL. With this redirection comes an authorization code included
+        in the redirect URL. We will use that to obtain an access token.
+        """
 
-    #session['oauth_token'] = token
+        #check if repo is valid repo
+        github = OAuth2Session(client_id, state=session['oauth_state'])
+        token = github.fetch_token(token_url, client_secret=client_secret, authorization_response=request.url)
 
-    # At this point you can fetch protected resources but lets save
-    # the token and show how this is done from a persisted token
-    # in /profile.
-    session['oauthkey'] = token
-    OAUTH_KEY = token
+        """check if repo exits"""
+        #get user details including username and repo
+        user_info = github.get('https://api.github.com/user')
+        json_ui = user_info.json()
 
-    #authorise user using token
-    github = OAuth2Session(client_id, token=OAUTH_KEY)
+        OWNER = json_ui['login']
+        session['owner'] = OWNER
 
-    #get user details including username and repo
-    user_info = github.get('https://api.github.com/user')
-    json_ui = user_info.json()
+        REPO = form.reponame.data
 
-    LOGIN = json_ui['login']
-    session['login'] = LOGIN
+        #check if repo already exists
+        if User.query.filter_by(repo=REPO,owner=OWNER).count() != 0:
+            return "You already registered your repo!"
 
-    #get repos
-    repo_info = github.get('https://api.github.com/user/repos')
+        #get repo
+        repo_info = github.get('https://api.github.com/repos/%s/%s' % (OWNER, REPO))
 
-    """Get the most recent repository using created_at key"""
-    dates = []
-    for repo in repo_info.json():
-        #add date of creation to list, converting from ISO8601 to datetime python type
-        dates.append(dateutil.parser.parse(repo['created_at']))
+        if repo_info.status_code == 200:
 
-    current_date = datetime.datetime.now(pytz.utc)
-    DATE_CREATED = max(date for date in dates if date < current_date)
+            #add user to table
+            new_record = User(OWNER, REPO, OWNER)#params: login,repo,owner
+            db.session.add(new_record)
+            db.session.commit()
 
-    #get latest repo name
-    for repo in repo_info.json():
-        if dateutil.parser.parse(repo['created_at']) == DATE_CREATED:
-            REPO = repo['name']
-            session['repo'] = REPO
-            OWNER = repo['owner']['login']
-            session['owner'] = OWNER
-
-    #add record to database
-    new_record = User(LOGIN, OAUTH_KEY, REPO, OWNER)
-
-    User.query.filter_by(login=LOGIN).delete()
-
-    db.session.add(new_record)
-    db.session.commit()
-
-    """Create webhook"""
-    # POST /repos/:owner/:repo/hooks
-    #works
-    json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://localhost:5000/webhook","content_type":"json","insecure_ssl": "1" }}
+            """Create webhook"""
+            # POST /repos/:owner/:repo/hooks
+            #works
+            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://localhost:5000/webhook","content_type":"json","insecure_ssl": "1" }}
 
 
-    create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO), json=json_data)
+            create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO), json=json_data)
 
-    print create_hook
+            if create_hook.status_code == 201:
+                flash('Tracking commits to git repo:"%s"' % (form.reponame.data))
+                return redirect('/spotify')
+            else:
+                flash('Something went wrong!')
+                return redirect('/')
 
-    response = make_response(redirect(url_for('commits')))
-    response.set_cookie('oauth', 'authorized')
-    return response
+
+
+    return render_template('form.html',
+                           title='Sign up',
+                           form=form)
+
+@app.route("/spotify",methods=["GET","POST"])
+def spotify():
+
+    return "Woo it works up to here"
 
 @app.route("/commits", methods=["GET", "POST"])
 def commits():
@@ -192,19 +190,6 @@ def commits():
         requests.post(SPOTIFY_BASE_URL + '/v1/users/michaelahari/playlists/5B1sHuZjlgROjT54SjA1i/'+'{"uris": ["spotify:track:0r4SsYcwvd8URat6AS2m6f"]}')
 
     return MESSAGE
-
-@app.route("/spotify", methods=["GET", "POST"])
-def spotify():
-
-
-
-    return ''
-
-@app.route("/spotifycallback", methods=["GET", "POST"])
-def spotify_callback():
-
-    return 'Success!'
-
 
 @app.route("/webhook", methods=["GET","POST"])
 def webhook():
