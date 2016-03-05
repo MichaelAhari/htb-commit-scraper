@@ -200,4 +200,5 @@ def webhook():
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.secret_key = os.urandom(24)
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
