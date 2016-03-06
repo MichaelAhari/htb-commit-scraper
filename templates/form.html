@@ -2,23 +2,55 @@
 <html>
 
 <head>
-<title></title>
+<title>Hack The Burgh 2016 - Commit Tracker</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="static/htb.css" type="text/css">
 </head>
 
 <body>
+  <br>
+  <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 text-center col-md-offset 6">
+      <div class="logo-content img-responsive">
+      <img class="logo logo_top img-responsive" src="static/htblogo2016.png"></img>
+      <img class="logo logo_bottom img-responsive" src="static/htblogo2016_color.png"></img>
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 text-center">
   {% block content %}
-  <h1>Repo name:</h1>
+  <h1>Repo name:</h1><br>
   <form action="" method="post" name="repo">
      {{ form.hidden_tag() }}
-    <p>{{form.reponame(size=50) }}<br></p>
-  <p><input type="submit" value="Track Commits"></p>
-</form>
-{% endblock %}
+       <div class="col-md-10 col-md-offset-1">
+          <div class="input-group">
+           <!--<input type="text" class="form-control" placeholder="Enter repo..."> -->
+            {{form.reponame(size=20, class="form-control", placeholder="Enter repo...") }}
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">Track!</button>
+            </span>
+          </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
 
-
-  <h1>Owner:</h1>
-
-
+  </form>
+  {% endblock %}
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>
 </body>
 
 </html>
