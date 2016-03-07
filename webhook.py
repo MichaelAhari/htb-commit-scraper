@@ -53,6 +53,21 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.login
 
+class Commit(db.Model):
+    __tablename__ = 'gitcommits'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(30))
+    repo = db.Column(db.String(30))
+    message = db.Column(db.String(120))
+
+    def __init__(self, username, repo, message):
+        self.username = username
+        self.repo = repo
+        self.message = message
+
+    def __repr__(self):
+        return '<User %r>' % self.login
+
 #create database
 db.create_all()
 
@@ -198,9 +213,15 @@ def commits():
 @app.route("/webhook", methods=["GET","POST"])
 def webhook():
 
-    if request.header.get('X-GitHub-Event') == "push":
-        json_data = request.json()
-        print json_data
+    if request.headers.get('X-GitHub-Event') == "push":
+        json_data = json.loads(request.data)
+        MESSAGE = json_data['head_commit']['message']
+        USER = json_data['head_commit']['author']['username']
+
+        new_record = Commit(USERNAME, REPO, MESSAGE)#params: username,repo,message
+        db.session.add(new_record)
+        db.session.commit()
+
 
     return ''
 
