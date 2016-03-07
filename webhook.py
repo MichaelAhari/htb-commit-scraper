@@ -64,7 +64,7 @@ token_url = 'https://github.com/login/oauth/access_token'
 redirect_uri = 'http://localhost:5000/callback'
 
 
-@app.route("/")
+@app.route("/", methods=["GET","POST"])
 def home():
 
 
@@ -198,7 +198,10 @@ def commits():
 @app.route("/webhook", methods=["GET","POST"])
 def webhook():
 
-    print 'Worked!'
+    if request.header.get('X-GitHub-Event') == "push":
+        json_data = request.json()
+        print json_data
+
     return ''
 
 if __name__ == '__main__':
