@@ -198,7 +198,8 @@ def commits():
 @app.route("/webhook", methods=["GET","POST"])
 def webhook():
 
-    return 'Worked!'
+    print 'Worked!'
+    return ''
 
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'

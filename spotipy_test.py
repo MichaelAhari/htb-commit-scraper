@@ -1,10 +1,11 @@
 import json
-from flask import Flask, request, redirect, g, render_template
+from flask import Flask, request, redirect, g, render_template, url_for, session
 import requests
 import base64
 import urllib
-import schedule
-import time
+import os
+# import schedule
+# import time
 
 # Authentication Steps, paramaters, and responses are defined at https://developer.spotify.com/web-api/authorization-guide/
 # Visit this url to see all the steps, parameters, and expected response.
@@ -53,7 +54,7 @@ def index():
 
 @app.route("/spotifycallback")
 def callback():
-    
+
     # Auth Step 4: Requests refresh and access tokens
     auth_token = request.args['code']
     code_payload = {
@@ -71,7 +72,19 @@ def callback():
     refresh_token = response_data["refresh_token"]
     token_type = response_data["token_type"]
     expires_in = response_data["expires_in"]
-    print expires_in
+
+    session['access_token'] = access_token
+    session['refresh_token'] = refresh_token
+    session['expires_in'] = expires_in
+
+    return redirect(url_for('test'))
+
+#render_template("index.html",sorted_array=display_arr)
+
+@app.route("/test", methods=["GET","POST"])
+def test():
+
+    access_token=session['access_token']
 
     # Auth Step 6: Use the access token to access Spotify API
     authorization_header = {"Authorization":"Bearer {}".format(access_token)}
@@ -80,16 +93,23 @@ def callback():
     user_profile_api_endpoint = "{}/me".format(SPOTIFY_API_URL)
     profile_response = requests.get(user_profile_api_endpoint, headers=authorization_header)
     profile_data = json.loads(profile_response.text)
-    #
+    # #
     # Get user playlist data
     playlist_api_endpoint = "{}/playlists".format(profile_data["href"])
     playlists_response = requests.get(playlist_api_endpoint, headers=authorization_header)
     playlist_data = json.loads(playlists_response.text)
-    #
-    # # Combine profile and playlist data to display
-    display_arr = [profile_data] + playlist_data["items"]
-    return "Success!"#render_template("index.html",sorted_array=display_arr)
+    # #
+    # # # Combine profile and playlist data to display
+    #display_arr = [profile_data] + playlist_data["items"]
+    print playlist_data["items"]
+    return ''
+
+def getToken():
+        redirect(url_for("index"))
+
+
 
 
 if __name__ == "__main__":
+    app.secret_key = os.urandom(24)
     app.run(debug=True,port=PORT)
