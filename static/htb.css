@@ -1,0 +1,152 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.9);
+  background-image: url(mus.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.logo{
+    position: absolute;
+    left: 0;
+    -webkit-transition: opacity .4s ease-in-out;
+    -moz-transition: opacity .4s ease-in-out;
+    -o-transition: opacity .4s ease-in-out;
+    transition: opacity .4s ease-in-out;
+}
+
+.header-content-inner {
+    padding-top: 5%;
+}
+
+@media (max-width: 420px) {
+    .header-content-inner {
+        padding-top: 35%;
+    }
+}
+
+@media (max-width: 800px) and (min-width: 800px) {
+    .header-content-inner > p {
+        margin-bottom: 10px !important;
+    }
+}
+
+@media (max-width: 767px){
+   .row.vertical-align { /*This is for the sponsor logos so they don't break on phones */
+        display: flex;
+        align-items: center;
+        }
+}
+
+.logo-content {
+    width: 504px;
+    height: 249px;
+    margin: 0 auto;
+    position: relative;
+    margin-bottom: 5%;
+}
+
+.logo_bottom {
+    opacity: 0;
+}
+
+.logo_bottom:hover {
+    opacity: 1;
+}
+
+.mlh_badge {
+    position:fixed;
+    top:0;
+    right:50px;
+    max-width:100px;
+    width:10%;
+    min-width: 60px;
+    display:block;
+    z-index:10000; /* whai?? */
+}
+.sponsors {
+    padding-bottom:10%;
+}
+
+.blklogo {
+    float:none;
+    margin: 0 auto;
+    width: 40%;
+}
+
+.jpmlogo, .ncrlogo {
+    float: none;
+    margin: 0 auto;
+}
+
+.armlogo {
+    float: none;
+    margin: 0 auto;
+    width: 70%;
+}
+
+.compsoclogo {
+    float: none;
+    margin: 0 auto;
+    width: 25%;
+}
+
+.eflogo {
+    float: none;
+    vertical-align: middle;
+    margin: 0 auto;
+    max-width: 10%;
+}
+
+/* Properties for typed-cursor */
+.typed-cursor{
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+
+.sponsorlogos{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
+}
+
+.sponsor-subtitle{
+    margin-bottom:5%;
+    font-weight:700;
+}
+
+.comic-sans * {
+    font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+}
+
+.airhorn{
+    position: fixed;
+    max-width: 5%;
+}
+.gitlogo{
+    max-width: 40%;
+
+}

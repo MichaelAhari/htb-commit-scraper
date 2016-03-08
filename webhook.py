@@ -146,7 +146,7 @@ def callback():
             """Create webhook"""
             # POST /repos/:owner/:repo/hooks
             #works
-            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://localhost:5000/webhook","content_type":"json","insecure_ssl": "1" }}
+            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://6b2f4dbd.ngrok.com/webhook","content_type":"json","insecure_ssl": "1" }}
 
 
             create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO), json=json_data)
@@ -169,54 +169,56 @@ def spotify():
 
     return "Woo it works up to here"
 
-@app.route("/commits", methods=["GET", "POST"])
-def commits():
+# @app.route("/commits", methods=["GET", "POST"])
+# def commits():
 
 
-    """refreshes token"""
-    User.query.filter_by(login=session['login']).delete()
-
-
-    new_record = User(session['login'], session['oauthkey'], session['repo'], session['owner'])
-
-    db.session.add(new_record)
-    db.session.commit()
-
-
-    #get all users from database
-    users = User.query.all()
-
-    for user in users:
-
-        LOGIN = user.login
-        OAUTH_KEY = user.oauthkey
-        REPO = user.repo
-        OWNER = user.owner
-
-        """Get latest commit to REPO"""
-        github = OAuth2Session(client_id, token=OAUTH_KEY)
-        commit = (github.get('https://api.github.com/repos/%s/%s/commits/master' % (OWNER, REPO))).json()
-        commit_date = dateutil.parser.parse(commit['commit']['author']['date'])
-
-        #check if commit has been made in the last 5 minutes
-        current_date = datetime.datetime.now(pytz.utc)
-        if (commit_date - current_date).total_seconds() < (5*60):
-            MESSAGE = commit['commit']['message']
-
-        #connect to spotify API
-        SPOTIFY_BASE_URL = 'https://api.spotify.com'
-        TRACK = '2kli84TSRXN5XoGsY75Nan'
-        requests.post(SPOTIFY_BASE_URL + '/v1/users/michaelahari/playlists/5B1sHuZjlgROjT54SjA1i/'+'{"uris": ["spotify:track:0r4SsYcwvd8URat6AS2m6f"]}')
-
-    return MESSAGE
+    # """refreshes token"""
+    # User.query.filter_by(login=session['login']).delete()
+    #
+    #
+    # new_record = User(session['login'], session['oauthkey'], session['repo'], session['owner'])
+    #
+    # db.session.add(new_record)
+    # db.session.commit()
+    #
+    #
+    # #get all users from database
+    # users = User.query.all()
+    #
+    # for user in users:
+    #
+    #     LOGIN = user.login
+    #     OAUTH_KEY = user.oauthkey
+    #     REPO = user.repo
+    #     OWNER = user.owner
+    #
+    #     """Get latest commit to REPO"""
+    #     github = OAuth2Session(client_id, token=OAUTH_KEY)
+    #     commit = (github.get('https://api.github.com/repos/%s/%s/commits/master' % (OWNER, REPO))).json()
+    #     commit_date = dateutil.parser.parse(commit['commit']['author']['date'])
+    #
+    #     #check if commit has been made in the last 5 minutes
+    #     current_date = datetime.datetime.now(pytz.utc)
+    #     if (commit_date - current_date).total_seconds() < (5*60):
+    #         MESSAGE = commit['commit']['message']
+    #
+    #     #connect to spotify API
+    #     SPOTIFY_BASE_URL = 'https://api.spotify.com'
+    #     TRACK = '2kli84TSRXN5XoGsY75Nan'
+    #     requests.post(SPOTIFY_BASE_URL + '/v1/users/michaelahari/playlists/5B1sHuZjlgROjT54SjA1i/'+'{"uris": ["spotify:track:0r4SsYcwvd8URat6AS2m6f"]}')
+    #
+    # return MESSAGE
 
 @app.route("/webhook", methods=["GET","POST"])
 def webhook():
 
     if request.headers.get('X-GitHub-Event') == "push":
         json_data = json.loads(request.data)
+        USERNAME = json_data['head_commit']['author']['username']
+        REPO = json_data['repository']['name']
         MESSAGE = json_data['head_commit']['message']
-        USER = json_data['head_commit']['author']['username']
+
 
         new_record = Commit(USERNAME, REPO, MESSAGE)#params: username,repo,message
         db.session.add(new_record)
