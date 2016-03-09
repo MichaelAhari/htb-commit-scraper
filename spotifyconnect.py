@@ -18,7 +18,10 @@ def spotifyConnect():
 def getTrack(playlist_id, token):
 
     #set up
-    USER_ID="spotify"
+    if playlist_id == "5IqZyShbVqwR9GQ1FVmHCT":
+        USER_ID = "spotify_uk_"
+    else:
+        USER_ID = "spotify"
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
 
@@ -28,7 +31,7 @@ def getTrack(playlist_id, token):
     item = randint(0,len(tracks)-1)
 
     #get tracks already in our playlist
-    request = sp.user_playlist(USER_ID, playlist_id="5B1sHuZjlgROjT54SjA1iP", fields="tracks")
+    request = sp.user_playlist('michaelahari', playlist_id="5B1sHuZjlgROjT54SjA1iP", fields="tracks")
     current_tracks = request['tracks']['items']
 
     #check its not already in the playlist
