@@ -76,7 +76,7 @@ client_id = "f9ba003f3e1eba4ff7f5"
 client_secret = "78dc535324b5e6fd8699748df2140f268147a8e4"
 authorization_base_url = 'https://github.com/login/oauth/authorize'
 token_url = 'https://github.com/login/oauth/access_token'
-redirect_uri = 'http://localhost:5000/callback'
+redirect_uri = 'http://michaelahari.co.uk/callback'
 
 
 @app.route("/", methods=["GET","POST"])
@@ -146,7 +146,7 @@ def callback():
             """Create webhook"""
             # POST /repos/:owner/:repo/hooks
             #works
-            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://6b2f4dbd.ngrok.com/webhook","content_type":"json","insecure_ssl": "1" }}
+            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://michaelahari.co.uk/webhook","content_type":"json","insecure_ssl": "1" }}
 
 
             create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO), json=json_data)

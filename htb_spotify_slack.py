@@ -91,7 +91,7 @@ def main():
     """Set up enviroment variables for spotify api"""
     os.environ['SPOTIPY_CLIENT_ID']='8189ec06c3b842fe8328860ac9d55bc1'
     os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
-    os.environ['SPOTIPY_REDIRECT_URI']=('http://localhost:5000/spotifycallback').encode('utf-8')
+    os.environ['SPOTIPY_REDIRECT_URI']=('http://michaelahari.co.uk/spotifycallback').encode('utf-8')
 
     playlists = {"confidence boost":"0Vib1QAMtMaiywa3QSEq40","feeling good":"1B9o7mER9kfxbmsRH9ko4z",
                     "great day":"2PXdUld4Ueio2pHcB6sM8j","good vibes": "3xgbBiNc7mh3erYsCl8Fwg", "breakup songs":"6dm9jZ2p8iGGTLre7nY4hf",
