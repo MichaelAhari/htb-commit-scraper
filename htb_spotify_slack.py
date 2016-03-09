@@ -34,27 +34,27 @@ def parseCommitMessage(message):
     if request.status_code == 200:
         request = json.loads(request.text)
         if request['label'] == "pos":
-            if request['probability']['pos'] >= 0.8:
+            if float(request['probability']['pos']) >= 0.8:
                 return "confidence boost"
-            elif request['probability']['pos'] >= 0.7:
+            elif float(request['probability']['pos']) >= 0.7:
                 return "great day"
-            elif request['probability']['pos'] >= 0.6:
+            elif float(request['probability']['pos']) >= 0.6:
                 return "feeling good"
             else:
                 return "good vibes"
 
         elif request['label'] == "neg":
-            if request['probability']['neg'] >= 0.8:
+            if float(request['probability']['neg']) >= 0.8:
                 return "breakup songs"
-            elif request['probability']['neg'] >= 0.7:
+            elif float(request['probability']['neg']) >= 0.7:
                 return "stress buster"
-            elif request['probability']['neg'] >= 0.6:
+            elif float(request['probability']['neg']) >= 0.6:
                 return "life sucks"
             else:
                 return "badass"
 
         else:
-            if request['probability']['neutral'] >= 0.7:
+            if float(request['probability']['neutral']) >= 0.7:
                 return "peaceful piano"
             else:
                 return "tropical house"
