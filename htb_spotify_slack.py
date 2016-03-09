@@ -30,6 +30,7 @@ def parseCommitMessage(message):
     url = "http://text-processing.com/api/sentiment/"
 
     request = requests.post(url,data="text="+message)
+    print request.status_code
     if request.status_code == 200:
         request = json.loads(request.text)
         if request['label'] == "pos":
@@ -103,11 +104,14 @@ def main():
     while 1:
         time.sleep(20)
         commit = getCommit(table_row)
-        sentiment = parseCommitMessage(commit[3])
-        track_name = addSpotifyTrack(playlists[sentiment])
-        message = createSlackMessage(commit[1],sentiment, track_name)
-        slackPost(message)
-        table_row += 1
+        if not commit:
+            #do nothing
+        else:
+            sentiment = parseCommitMessage(commit[3])
+            track_name = addSpotifyTrack(playlists[sentiment])
+            message = createSlackMessage(commit[1],sentiment, track_name)
+            slackPost(message)
+            table_row += 1
 
 if __name__ == "__main__":
     main()
