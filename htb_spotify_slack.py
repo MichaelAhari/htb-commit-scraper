@@ -104,9 +104,7 @@ def main():
     while 1:
         time.sleep(20)
         commit = getCommit(table_row)
-        if not commit:
-            #do nothing
-        else:
+        if commit:
             sentiment = parseCommitMessage(commit[3])
             track_name = addSpotifyTrack(playlists[sentiment])
             message = createSlackMessage(commit[1],sentiment, track_name)
