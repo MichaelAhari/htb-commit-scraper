@@ -6,6 +6,9 @@ from nltk.tokenize import TweetTokenizer
 import nltk
 import requests
 import json
+import spotipy
+import spotipy.util as util
+import os
 
 import spotify_connect
 
@@ -36,40 +39,71 @@ def parseCommitMessage(message):
     # using the Sentiment Analysis API
     url = "http://text-processing.com/api/sentiment/"
 
-    #tokenize the message
-    tokenizer = TweetTokenizer()
-    tokens = tokenizer.tokenize(message)
+    request = requests.post(url,data="text="+token).json()
+    if request['label'] == "pos":
+        if request['probability']['pos'] >= 0.8:
+            return "confidence boost"
+        elif request['probability']['pos'] >= 0.7:
+            return "great day"
+        elif request['probability']['pos'] >= 0.6:
+            return "feeling good"
+        else:
+            return "good vibes"
 
-    coefficient = 0
-    num_neutral = 0
-    for token in tokens:
+    elif request['label'] == "neg":
+        if request['label']['neg'] >= 0.8:
+            return "breakup songs"
+        elif request['label']['neg'] >= 0.7:
+            return "stress buster"
+        elif request['label']['neg'] >= 0.6:
+            return "life sucks"
+        else:
+            return "badass"
 
-        request = requests.post(url,data="text="+token).json()
-        if request['label'] == "neutral":
-            coefficient /= 5
-            num_neutral += 1
-        else :
-            pos = request['probability']['pos']
-            neg = request['probability']['neg']
-            coefficient += 100 * (pos - neg)
-
-    if coefficient >= 0.5 * 100 * len(tokens):
-        return {"on top of the world", "unstoppable", "excited"}
-    elif coefficient >= 0.2 * 100 * len(tokens):
-        return {"feel good", "happy", "fun"}
-    elif coefficient >= 0.1 * 100 * len(tokens):
-        return {"productive", "work", "focus"}
-    elif coefficient > 0:
-        return {"chilled, relax, calm"}
-    elif coefficient > -0.05 * 100 * len(tokens):
-        return {"unhappy, sad"}
-    elif coefficient > -0.1 * 100 * len(tokens):
-        return {"frustrated", "annoyed", "angry"}
     else:
-        return {"irritated", "furious", "disheartened"}
+        if request['label']['neutral'] >= 0.8:
+            return "peaceful piano"
+        elif request['label']['neutral'] >= 0.7:
+            return "brain food"
+        elif request['label']['neutral'] >= 0.6:
+            return "beats to think to"
+        else:
+            return "afternoon acoustic"
+
+    # coefficient = 0
+    # num_neutral = 0
+    # for token in tokens:
+    #
+    #     request = requests.post(url,data="text="+token).json()
+    #     if request['label'] == "neutral":
+    #         coefficient /= 5
+    #         num_neutral += 1
+    #     else :
+    #         pos = request['probability']['pos']
+    #         neg = request['probability']['neg']
+    #         coefficient += 100 * (pos - neg)
+    #
+    # if coefficient >= 0.5 * 100 * len(tokens):
+    #     return {"on top of the world", "unstoppable", "excited"}
+    # elif coefficient >= 0.2 * 100 * len(tokens):
+    #     return {"feel good", "happy", "fun"}
+    # elif coefficient >= 0.1 * 100 * len(tokens):
+    #     return {"productive", "work", "focus"}
+    # elif coefficient > 0:
+    #     return {"chilled, relax, calm"}
+    # elif coefficient > -0.05 * 100 * len(tokens):
+    #     return {"unhappy, sad"}
+    # elif coefficient > -0.1 * 100 * len(tokens):
+    #     return {"frustrated", "annoyed", "angry"}
+    # else:
+    #     return {"irritated", "furious", "disheartened"}
 
 
-def getSpotifyTrack(keywords):
+def getSpotifyTrack(playlist_id):
+
+
+
+
     return ''
 
 def createSlackMessage(username, message, track_name, track_artist):
@@ -77,13 +111,24 @@ def createSlackMessage(username, message, track_name, track_artist):
     return message
 
 def main():
+    """Set up enviroment variables for spotify api"""
+    os.environ['SPOTIPY_CLIENT_ID']='8189ec06c3b842fe8328860ac9d55bc1'
+    os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
+    os.environ['SPOTIPY_REDIRECT_URI']=('http://localhost:5000/spotifycallback').encode('utf-8')
+
+    playlists = {"confidence boost":"0Vib1QAMtMaiywa3QSEq40","feeling good":,
+                    "great day":"2PXdUld4Ueio2pHcB6sM8j","good vibes": "3xgbBiNc7mh3erYsCl8Fwg", "breakup songs":"6dm9jZ2p8iGGTLre7nY4hf",
+                    "stress buster":"6JC48D3eRvkUHACDtyu0Gs","life sucks":"5eSMIpsnkXJhXEPyRQCTSc", "badass":"3V1WI57CMyQdmxy3aibCB4",
+                    "peaceful piano":"63dDpdoVHvx5RkK87g4LKk", "brain food":"67nMZWgcUxNa5uaiyLDR2x",
+                    "beats to think to":"2nKFnGNFvHX9hG5Kv7Bm3G","afternoon acoustic":"16BpjqQV1Ey0HeDueNDSYz"}
+
     table_row = 1
     while 1:
         time.sleep(5*60)
         commit = getCommit(table_row)
-        keywords = parseCommitMessage(commit[3])
-        track_name, track_artist = getSpotifyTrack(keywords)
-        message = createSlackMessage(commit[1],keywords, track_name, track_artist)
+        sentiment = parseCommitMessage(commit[3])
+        track_name, track_artist = getSpotifyTrack(playlists[sentiment])
+        message = createSlackMessage(commit[1],sentiment, track_name, track_artist)
         slackPost(message)
         row += 1
 
