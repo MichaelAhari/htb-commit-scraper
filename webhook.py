@@ -146,7 +146,7 @@ def callback():
             """Create webhook"""
             # POST /repos/:owner/:repo/hooks
             #works
-            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://michaelahari.co.uk/webhook","content_type":"json","insecure_ssl": "1" }}
+            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://michaelahari.co.uk/webhook","content_type":"json"}}
 
 
             create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO), json=json_data)
@@ -228,5 +228,4 @@ def webhook():
     return ''
 
 if __name__ == '__main__':
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.run(debug=True)
