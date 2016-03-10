@@ -30,7 +30,6 @@ def parseCommitMessage(message):
     url = "http://text-processing.com/api/sentiment/"
 
     request = requests.post(url,data="text="+message)
-    print request.status_code
     if request.status_code == 200:
         request = json.loads(request.text)
         if request['label'] == "pos":
