@@ -21,6 +21,7 @@ import spotipy.util as util
 app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
+app.config['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:htbcommitscraper@178.62.99.27/users'
 app.config['DEBUG'] = True
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -228,5 +229,4 @@ def webhook():
     return ''
 
 if __name__ == '__main__':
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
     app.run(debug=True)

@@ -60,10 +60,10 @@ def parseCommitMessage(message):
     else:
         return "tropical house"
 
-def addSpotifyTrack(playlist_id):
+def addSpotifyTrack(playlist_info):
     token = spotifyConnect()
 
-    track = getTrack(playlist_id, token)
+    track = getTrack(playlist_info, token)
 
     track_uri = track['track']['uri']
     addTrack(track_uri, token)
@@ -93,15 +93,22 @@ def main():
     os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
     os.environ['SPOTIPY_REDIRECT_URI']=('http://michaelahari.co.uk/spotifycallback').encode('utf-8')
 
-    playlists = {"confidence boost":"0Vib1QAMtMaiywa3QSEq40","feeling good":"1B9o7mER9kfxbmsRH9ko4z",
-                    "great day":"2PXdUld4Ueio2pHcB6sM8j","good vibes": "3xgbBiNc7mh3erYsCl8Fwg", "breakup songs":"6dm9jZ2p8iGGTLre7nY4hf",
-                    "stress buster":"6JC48D3eRvkUHACDtyu0Gs","life sucks":"5eSMIpsnkXJhXEPyRQCTSc", "badass":"3V1WI57CMyQdmxy3aibCB4",
-                    "peaceful piano":"63dDpdoVHvx5RkK87g4LKk", "brain food":"67nMZWgcUxNa5uaiyLDR2x",
-                    "afternoon acoustic":"16BpjqQV1Ey0HeDueNDSYz", "tropical house":"5IqZyShbVqwR9GQ1FVmHCT"}
+    playlists = {"confidence boost":{"playlist_id": "0Vib1QAMtMaiywa3QSEq40","artist":"spotify"},
+                "feeling good":{"playlist_id":"1B9o7mER9kfxbmsRH9ko4z","artist":"spotify"},
+                "great day":{"playist_id":"2PXdUld4Ueio2pHcB6sM8j","artist":"spotify"},
+                "good vibes":{"playlist_id":"3xgbBiNc7mh3erYsCl8Fwg", "artist":"spotify"},
+                "breakup songs":{"playlist_id":"6dm9jZ2p8iGGTLre7nY4hf", "artist":"sonymusic"},
+                "stress buster":{"playlist_id":"6JC48D3eRvkUHACDtyu0Gs","artist":"spotify_uk_"},
+                "life sucks":{"playlist_id":"5eSMIpsnkXJhXEPyRQCTSc", "artist":"spotify"},
+                "badass":{"playlist_id":"3V1WI57CMyQdmxy3aibCB4", "artist":"spotify_uk_"},
+                "peaceful piano":{"playlist_id":"63dDpdoVHvx5RkK87g4LKk", "artist":"spotify"},
+                "brain food":{"playlist_id":"67nMZWgcUxNa5uaiyLDR2x", "artist":"spotify"},
+                "afternoon acoustic":{"playlist_id":"16BpjqQV1Ey0HeDueNDSYz", "artist":"spotify"},
+                "tropical house":{"playlist_id":"5IqZyShbVqwR9GQ1FVmHCT","arist":"spotify_uk_"}}
 
     table_row = 1
     while 1:
-        time.sleep(20)
+        time.sleep(5*60)
         commit = getCommit(table_row)
         if commit:
             sentiment = parseCommitMessage(commit[3])

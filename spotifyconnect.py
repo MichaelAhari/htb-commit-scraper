@@ -15,18 +15,17 @@ def spotifyConnect():
     token = util.prompt_for_user_token(username, scope)
     return token
 
-def getTrack(playlist_id, token):
+def getTrack(playlist_info, token):
 
     #set up
-    if playlist_id == "5IqZyShbVqwR9GQ1FVmHCT":
-        USER_ID = "spotify_uk_"
-    else:
-        USER_ID = "spotify"
+    USER_ID = playlist_info["artist"]
+    PLAYLIST_ID = playlist_info["playlist_id"]
+
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
 
     #get tracks in playlist
-    request = sp.user_playlist(USER_ID, playlist_id=playlist_id, fields="tracks")
+    request = sp.user_playlist(USER_ID, playlist_id=PLAYLIST_ID, fields="tracks")
     tracks = request['tracks']['items']
     item = randint(0,len(tracks)-1)
 
