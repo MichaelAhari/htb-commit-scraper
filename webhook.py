@@ -21,7 +21,6 @@ import spotipy.util as util
 app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
-app.config['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:htbcommitscraper@178.62.99.27/users'
 app.config['DEBUG'] = True
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -77,7 +76,7 @@ client_id = "f9ba003f3e1eba4ff7f5"
 client_secret = "78dc535324b5e6fd8699748df2140f268147a8e4"
 authorization_base_url = 'https://github.com/login/oauth/authorize'
 token_url = 'https://github.com/login/oauth/access_token'
-redirect_uri = 'http://michaelahari.co.uk/callback'
+redirect_uri = 'http://localhost:5000/callback'
 
 
 @app.route("/", methods=["GET","POST"])
@@ -106,19 +105,32 @@ def home():
 def callback():
 
     """Get REPO name from user"""
+    #form = LoginForm()
+    #if form.validate_on_submit():
+
+    """ Step 3: Retrieving an access token.
+
+    The user has been redirected back from the provider to your registered
+    callback URL. With this redirection comes an authorization code included
+    in the redirect URL. We will use that to obtain an access token.
+    """
+
+    #check if repo is valid repo
+    github = OAuth2Session(client_id, state=session['oauth_state'])
+    token = github.fetch_token(token_url, client_secret=client_secret, authorization_response=request.url)
+
+    session['token'] = token
+
+    return redirect(url_for('form'))
+
+@app.route("/form", methods=["GET","POST"])
+def form():
+
     form = LoginForm()
     if form.validate_on_submit():
 
-        """ Step 3: Retrieving an access token.
-
-        The user has been redirected back from the provider to your registered
-        callback URL. With this redirection comes an authorization code included
-        in the redirect URL. We will use that to obtain an access token.
-        """
-
-        #check if repo is valid repo
-        github = OAuth2Session(client_id, state=session['oauth_state'])
-        token = github.fetch_token(token_url, client_secret=client_secret, authorization_response=request.url)
+        OAUTH_KEY = session['token']
+        github = OAuth2Session(client_id, token=OAUTH_KEY)
 
         """check if repo exits"""
         #get user details including username and repo
@@ -132,7 +144,8 @@ def callback():
 
         #check if repo already exists
         if User.query.filter_by(repo=REPO,owner=OWNER).count() != 0:
-            return "You already registered your repo!"
+            flash ("You already registered your repo!")
+            return "error" #redirect(url_for(''))
 
         #get repo
         repo_info = github.get('https://api.github.com/repos/%s/%s' % (OWNER, REPO))
@@ -146,11 +159,13 @@ def callback():
 
             """Create webhook"""
             # POST /repos/:owner/:repo/hooks
-            #works
-            json_data = {"name": "web", "active": True, "events": ["push"], "config": {"url": "http://michaelahari.co.uk/webhook","content_type":"json"}}
+            json_data = {"name": "web",
+                            "active": True,
+                            "events": ["push"],
+                            "config": {"url": "http://localhost:5000/webhook","content_type":"json", "insecure_ssl":1}}
 
 
-            create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO), json=json_data)
+            create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO),data=json.dumps(json_data))
 
             if create_hook.status_code == 201:
                 flash('Tracking commits to git repo:"%s"' % (form.reponame.data))
@@ -159,11 +174,11 @@ def callback():
                 flash('Something went wrong!')
                 return redirect('/')
 
-
-
     return render_template('form.html',
                            title='Sign up',
                            form=form)
+
+
 
 @app.route("/spotify",methods=["GET","POST"])
 def spotify():
@@ -220,6 +235,12 @@ def webhook():
         REPO = json_data['repository']['name']
         MESSAGE = json_data['head_commit']['message']
 
+        text = urllib.quote(USERNAME + ": " + MESSAGE, safe='')
+        json={"text":text,"username":"octocat","icon_emoji": ":ghost:"}
+
+        post = requests.post("https://hooks.slack.com/services/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", data=json.dumps(json))
+        
+
 
         new_record = Commit(USERNAME, REPO, MESSAGE)#params: username,repo,message
         db.session.add(new_record)
@@ -229,4 +250,5 @@ def webhook():
     return ''
 
 if __name__ == '__main__':
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.run(debug=True)
