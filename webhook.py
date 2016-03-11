@@ -11,6 +11,7 @@ import pytz
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 from flask import make_response
+import urllib
 
 #import spotify python api
 import spotipy
@@ -235,13 +236,14 @@ def webhook():
         REPO = json_data['repository']['name']
         MESSAGE = json_data['head_commit']['message']
 
-        text = urllib.quote(USERNAME + ": " + MESSAGE, safe='')
-        json={"text":text,"username":"octocat","icon_emoji": ":ghost:"}
+        #set up call to slack webhook
+        text = "*" + USERNAME + "* just pushed a commit to `" + REPO + "`: _\"" + MESSAGE + "\"_"
+        json_data={"text":text,"username":REPO,"icon_emoji": ":octocat:"}
+        url = "https://hooks.slack.com/services/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"
 
-        post = requests.post("https://hooks.slack.com/services/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", data=json.dumps(json))
-        
+        post = requests.post(url, data=json.dumps(json_data))
 
-
+        #write commit to database
         new_record = Commit(USERNAME, REPO, MESSAGE)#params: username,repo,message
         db.session.add(new_record)
         db.session.commit()
