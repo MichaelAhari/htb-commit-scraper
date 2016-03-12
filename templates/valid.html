@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hack The Burgh 2016 - Commit Tracker</title>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="static/htb.css" type="text/css">
+</head>
+
+<body>
+  <br>
+  <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 text-center col-md-offset 6">
+      <div class="logo-content img-responsive">
+      <img class="logo logo_top img-responsive" src="static/htblogo2016.png"></img>
+      <img class="logo logo_bottom img-responsive" src="static/htblogo2016_color.png"></img>
+    </div>
+  </div>
+
+    <div align = "center">
+      {% block content %}
+      <h3>{{ title }} Now tracking git commits to <b>{{ owner }}</b>'s repo: <b>{{ repo }}</b> <h3>
+      </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-3 text-center">
+        <p>Head on over to the Hack The Burgh Slack team to check out commits as they are pushed!</p>
+        <a class="btn btn-info" href="http://hacktheburgh.slack.com" target="_blank" role="button">
+          Check out slack!
+        </a>
+      </div>
+      <div class="col-md-3 text-center">
+        <p>You can also check out the spotify playlist here! Make requests via the #spotify Slack channel!</p>
+        <a class="btn btn-info" href="http://spotify.com" target="_blank" role="button">
+          Check out spotify!
+        </a>
+      </div>
+      <div class="col-md-3"></div>
+      {% endblock %}
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>

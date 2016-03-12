@@ -42,17 +42,15 @@ class LoginForm(Form):
 class User(db.Model):
     __tablename__ = 'gitusers'
     id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(30))
     repo = db.Column(db.String(30))
     owner = db.Column(db.String(30))
 
-    def __init__(self, login, repo, owner):
-        self.login = login
+    def __init__(self, repo, owner):
         self.repo = repo
         self.owner = owner
 
     def __repr__(self):
-        return '<User %r>' % self.login
+        return '<User %r>' % self.owner
 
 class Commit(db.Model):
     __tablename__ = 'gitcommits'
@@ -121,11 +119,15 @@ def callback():
     token = github.fetch_token(token_url, client_secret=client_secret, authorization_response=request.url)
 
     session['token'] = token
+    session['token'].permanent = True
 
     return redirect(url_for('form'))
 
 @app.route("/form", methods=["GET","POST"])
 def form():
+
+    if not session.has_key('token'):
+        return redirect(url_for('/'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -143,7 +145,7 @@ def form():
 
         REPO = form.reponame.data
 
-        #check if repo already exists
+        #check if repo already exists in database
         if User.query.filter_by(repo=REPO,owner=OWNER).count() != 0:
             flash ("You already registered your repo!")
             return "error" #redirect(url_for(''))
@@ -154,7 +156,7 @@ def form():
         if repo_info.status_code == 200:
 
             #add user to table
-            new_record = User(OWNER, REPO, OWNER)#params: login,repo,owner
+            new_record = User(REPO, OWNER)#params: login,repo,owner
             db.session.add(new_record)
             db.session.commit()
 
@@ -170,10 +172,10 @@ def form():
 
             if create_hook.status_code == 201:
                 flash('Tracking commits to git repo:"%s"' % (form.reponame.data))
-                return redirect('/spotify')
+                return redirect(url_for('valid', repo=REPO, owner=OWNER))
             else:
                 flash('Something went wrong!')
-                return redirect('/')
+                return redirect('/form')
 
     return render_template('form.html',
                            title='Sign up',
@@ -181,10 +183,18 @@ def form():
 
 
 
-@app.route("/spotify",methods=["GET","POST"])
-def spotify():
+@app.route("/valid",methods=["GET","POST"])
+def valid():
 
-    return "Woo it works up to here"
+    if request.args.get("repo") == None:
+        return redirect(url_for('home'))
+
+    REPO = request.args.get("repo")
+    OWNER = request.args.get("owner")
+
+    return render_template('valid.html', title='Awesome!', repo=REPO, owner=OWNER)
+
+    #return "Woo it works up to here"
 
 # @app.route("/commits", methods=["GET", "POST"])
 # def commits():
@@ -238,7 +248,7 @@ def webhook():
 
         #set up call to slack webhook
         text = "*" + USERNAME + "* just pushed a commit to `" + REPO + "`: _\"" + MESSAGE + "\"_"
-        json_data={"text":text,"username":REPO,"icon_emoji": ":octocat:"}
+        json_data={"text":text,"username":REPO,"icon_emoji": ":octocat"}
         url = "https://hooks.slack.com/services/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"
 
         post = requests.post(url, data=json.dumps(json_data))
