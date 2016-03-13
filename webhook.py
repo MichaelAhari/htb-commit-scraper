@@ -125,9 +125,9 @@ def callback():
 
 @app.route("/form", methods=["GET","POST"])
 def form():
-
+    error=None
     if not session.has_key('token'):
-        return redirect(url_for('/'))
+        return redirect(url_for('home'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -141,14 +141,13 @@ def form():
         json_ui = user_info.json()
 
         OWNER = json_ui['login']
-        session['owner'] = OWNER
 
         REPO = form.reponame.data
 
         #check if repo already exists in database
-        if User.query.filter_by(repo=REPO,owner=OWNER).count() != 0:
-            flash ("You already registered your repo!")
-            return "error" #redirect(url_for(''))
+        if User.query.filter_by(repo=REPO,owner=OWNER).count() > 0:
+            error = "Looks like you already registered your repo!"
+            return render_template('form.html',title='Sign up', form=form,error=error)
 
         #get repo
         repo_info = github.get('https://api.github.com/repos/%s/%s' % (OWNER, REPO))
@@ -173,13 +172,12 @@ def form():
             if create_hook.status_code == 201:
                 flash('Tracking commits to git repo:"%s"' % (form.reponame.data))
                 return redirect(url_for('valid', repo=REPO, owner=OWNER))
-            else:
-                flash('Something went wrong!')
-                return redirect('/form')
+        else:
+            error = "We couldn't find your repo! Try again"
+            return render_template('form.html',title='Sign up', form=form,error=error)
 
-    return render_template('form.html',
-                           title='Sign up',
-                           form=form)
+    return render_template('form.html',title='Sign up', form=form,error=error)
+
 
 
 

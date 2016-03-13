@@ -46,6 +46,9 @@
         </div><!-- /.col-lg-6 -->
 
   </form>
+  {% if error %}
+    <p><strong>Woops! {{ error }}</strong>
+  {% endif %}
   {% endblock %}
     </div>
     <div class="col-md-4"></div>
