@@ -24,7 +24,6 @@ def getCommit(table_row):
         #do nothing since no new commits have been made
 
 #credits - Andreea, Ramona, Andra
-#not working very well with coefficient at the moment need to find new solution
 def parseCommitMessage(message):
     # using the Sentiment Analysis API
     url = "http://text-processing.com/api/sentiment/"
