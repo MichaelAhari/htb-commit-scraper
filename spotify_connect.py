@@ -46,7 +46,7 @@ def addTrack(track_id, token):
 
     #set up
     USER_ID="michaelahari"
-    PLAYLIST_ID = "5B1sHuZjlgROjT54SjA1iP"
+    PLAYLIST_ID = "0H8XxdGolLwGr45HVEU9Dm"
     TRACK_IDS = [track_id]
 
     sp = spotipy.Spotify(auth=token)
