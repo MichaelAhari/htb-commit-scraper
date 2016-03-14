@@ -30,7 +30,7 @@ def getTrack(playlist_info, token):
     item = randint(0,len(tracks)-1)
 
     #get tracks already in our playlist
-    request = sp.user_playlist('michaelahari', playlist_id="5B1sHuZjlgROjT54SjA1iP", fields="tracks")
+    request = sp.user_playlist('michaelahari', playlist_id="0H8XxdGolLwGr45HVEU9Dm", fields="tracks")
     current_tracks = request['tracks']['items']
 
     #check its not already in the playlist
@@ -52,7 +52,7 @@ def addTrack(track_id, token):
 
     #set up
     USER_ID="michaelahari"
-    PLAYLIST_ID = "5B1sHuZjlgROjT54SjA1iP"
+    PLAYLIST_ID = "0H8XxdGolLwGr45HVEU9Dm"
     TRACK_IDS = [track_id]
 
     sp = spotipy.Spotify(auth=token)
