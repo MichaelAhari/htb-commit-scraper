@@ -146,7 +146,7 @@ def form():
 
         #check if repo already exists in database
         if User.query.filter_by(repo=REPO,owner=OWNER).count() > 0:
-            error = "Looks like you already registered your repo!"
+            error = "Looks like you already registered that repo!"
             return render_template('form.html',title='Sign up', form=form,error=error)
 
         #get repo
@@ -173,7 +173,7 @@ def form():
                 flash('Tracking commits to git repo:"%s"' % (form.reponame.data))
                 return redirect(url_for('valid', repo=REPO, owner=OWNER))
         else:
-            error = "We couldn't find your repo! Try again"
+            error = "We couldn't find a matching repository you own"
             return render_template('form.html',title='Sign up', form=form,error=error)
 
     return render_template('form.html',title='Sign up', form=form,error=error)
