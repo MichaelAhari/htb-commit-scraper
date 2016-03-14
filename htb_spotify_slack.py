@@ -78,14 +78,22 @@ def createSlackMessage(username, message, track_name):
     return message
 
 def slackPost(message):
-    #avoid insecure https requests because of python version 2.7
-    urllib3.contrib.pyopenssl.inject_into_urllib3()
+    # #avoid insecure https requests because of python version 2.7
+    # urllib3.contrib.pyopenssl.inject_into_urllib3()
+    #
+    # #open connection to slack team
+    # slack = Slacker('xoxp-22587310162-22583961635-22592796609-102d04a936')
+    #
+    # # Send a message to #general channel
+    # slack.chat.post_message('#general', message, None, as_user=True)
 
-    #open connection to slack team
-    slack = Slacker('xoxp-22587310162-22583961635-22592796609-102d04a936')
 
-    # Send a message to #general channel
-    slack.chat.post_message('#general', message, None, as_user=True)
+    #set up call to slack webhook
+    json_data={"channel": "#spotify", "text":message,"username":"SpotifyBot","icon_emoji": ":spotify"}
+    url = "https://hooks.slack.com/services/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" # hack the burgh group, #github channel
+    #url = "https://hooks.slack.com/services/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"
+
+    post = requests.post(url, data=json.dumps(json_data))
 
 def main():
     """Set up enviroment variables for spotify api"""

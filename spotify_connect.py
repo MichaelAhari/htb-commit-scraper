@@ -5,10 +5,6 @@ import json
 import requests
 from random import randint
 
-os.environ['SPOTIPY_CLIENT_ID']='8189ec06c3b842fe8328860ac9d55bc1'
-os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
-os.environ['SPOTIPY_REDIRECT_URI']=('http://localhost:5000/spotifycallback').encode('utf-8')
-
 def spotifyConnect():
     username = 'michaelahari'
     scope = 'playlist-modify-public'
@@ -28,7 +24,7 @@ def getTrack(playlist_id, token):
     item = randint(0,len(tracks)-1)
 
     #get tracks already in our playlist
-    request = sp.user_playlist(USER_ID, playlist_id="5B1sHuZjlgROjT54SjA1iP", fields="tracks")
+    request = sp.user_playlist(USER_ID, playlist_id="0H8XxdGolLwGr45HVEU9Dm", fields="tracks")
     current_tracks = request['tracks']['items']
 
     #check its not already in the playlist

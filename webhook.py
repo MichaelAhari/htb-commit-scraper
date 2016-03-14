@@ -75,8 +75,8 @@ client_id = "f9ba003f3e1eba4ff7f5"
 client_secret = "78dc535324b5e6fd8699748df2140f268147a8e4"
 authorization_base_url = 'https://github.com/login/oauth/authorize'
 token_url = 'https://github.com/login/oauth/access_token'
-redirect_uri = 'http://localhost:5000/callback'
-
+redirect_uri = 'http://michaelahari.co.uk/callback'
+#redirect_uri = 'http://localhost:5000/callback'
 
 @app.route("/", methods=["GET","POST"])
 def home():
@@ -247,7 +247,8 @@ def webhook():
         #set up call to slack webhook
         text = "*" + USERNAME + "* just pushed a commit to `" + REPO + "`: _\"" + MESSAGE + "\"_"
         json_data={"text":text,"username":REPO,"icon_emoji": ":octocat"}
-        url = "https://hooks.slack.com/services/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"
+        url = "https://hooks.slack.com/services/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" # hack the burgh group, #github channel
+        #url = "https://hooks.slack.com/services/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"
 
         post = requests.post(url, data=json.dumps(json_data))
 
