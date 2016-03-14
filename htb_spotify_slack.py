@@ -23,7 +23,7 @@ def getCommit(table_row):
         return False
         #do nothing since no new commits have been made
 
-#credits - Andreea, Ramona, Andra
+#credits - Andreea, Ramona, Andra who developed this at StacsHack 2016
 def parseCommitMessage(message):
     # using the Sentiment Analysis API
     url = "http://text-processing.com/api/sentiment/"
