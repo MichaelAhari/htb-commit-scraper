@@ -74,7 +74,7 @@ def addSpotifyTrack(playlist_info):
 
 
 def createSlackMessage(username, message, track_name):
-    message = "New track on the playlist: \"%s\". This one is for %s, who is feeling %s with their latest commit." % (track_name, username, message)
+    message = "New track on the playlist: \"%s\". This one is for %s, who is feeling %s." % (track_name, username, message)
     return message
 
 def slackPost(message):
@@ -89,7 +89,7 @@ def slackPost(message):
 
 
     #set up call to slack webhook
-    json_data={"channel": "#spotify", "text":message,"username":"SpotifyBot","icon_emoji": ":spotify"}
+    json_data={"channel": "#spotify", "text":message,"username":"SpotifyBot","icon_emoji": ":spotify:"}
     url = "https://hooks.slack.com/services/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" # hack the burgh group, #github channel
     #url = "https://hooks.slack.com/services/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"
 
