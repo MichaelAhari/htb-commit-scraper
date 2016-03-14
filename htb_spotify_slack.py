@@ -112,7 +112,7 @@ def main():
                 "peaceful piano":{"playlist_id":"63dDpdoVHvx5RkK87g4LKk", "artist":"spotify"},
                 "brain food":{"playlist_id":"67nMZWgcUxNa5uaiyLDR2x", "artist":"spotify"},
                 "afternoon acoustic":{"playlist_id":"16BpjqQV1Ey0HeDueNDSYz", "artist":"spotify"},
-                "tropical house":{"playlist_id":"5IqZyShbVqwR9GQ1FVmHCT","arist":"spotify_uk_"}}
+                "tropical house":{"playlist_id":"5IqZyShbVqwR9GQ1FVmHCT","artist":"spotify_uk_"}}
 
     table_row = 1
     while 1:
