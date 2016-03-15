@@ -102,7 +102,7 @@ def main():
 
     playlists = {"confidence boost":{"playlist_id": "0Vib1QAMtMaiywa3QSEq40","artist":"spotify"},
                 "feeling good":{"playlist_id":"1B9o7mER9kfxbmsRH9ko4z","artist":"spotify"},
-                "great day":{"playist_id":"2PXdUld4Ueio2pHcB6sM8j","artist":"spotify"},
+                "great day":{"playlist_id":"2PXdUld4Ueio2pHcB6sM8j","artist":"spotify"},
                 "good vibes":{"playlist_id":"3xgbBiNc7mh3erYsCl8Fwg", "artist":"spotify"},
                 "breakup songs":{"playlist_id":"6dm9jZ2p8iGGTLre7nY4hf", "artist":"sonymusic"},
                 "stress buster":{"playlist_id":"6JC48D3eRvkUHACDtyu0Gs","artist":"spotify_uk_"},
