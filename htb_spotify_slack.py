@@ -100,18 +100,18 @@ def main():
     os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
     os.environ['SPOTIPY_REDIRECT_URI']=('http://michaelahari.co.uk/spotifycallback').encode('utf-8')
 
-    playlists = {"confidence boost":{"playlist_id": "0Vib1QAMtMaiywa3QSEq40","artist":"spotify"},
-                "feeling good":{"playlist_id":"1B9o7mER9kfxbmsRH9ko4z","artist":"spotify"},
-                "great day":{"playlist_id":"2PXdUld4Ueio2pHcB6sM8j","artist":"spotify"},
-                "good vibes":{"playlist_id":"3xgbBiNc7mh3erYsCl8Fwg", "artist":"spotify"},
-                "breakup songs":{"playlist_id":"6dm9jZ2p8iGGTLre7nY4hf", "artist":"sonymusic"},
-                "stress buster":{"playlist_id":"6JC48D3eRvkUHACDtyu0Gs","artist":"spotify_uk_"},
-                "life sucks":{"playlist_id":"5eSMIpsnkXJhXEPyRQCTSc", "artist":"spotify"},
-                "badass":{"playlist_id":"3V1WI57CMyQdmxy3aibCB4", "artist":"spotify_uk_"},
-                "peaceful piano":{"playlist_id":"63dDpdoVHvx5RkK87g4LKk", "artist":"spotify"},
-                "brain food":{"playlist_id":"67nMZWgcUxNa5uaiyLDR2x", "artist":"spotify"},
-                "afternoon acoustic":{"playlist_id":"16BpjqQV1Ey0HeDueNDSYz", "artist":"spotify"},
-                "tropical house":{"playlist_id":"5IqZyShbVqwR9GQ1FVmHCT","artist":"spotify_uk_"}}
+    playlists = {"confidence boost":{"playlist_id": "0Vib1QAMtMaiywa3QSEq40","artist":"spotify","sentiment":"on top of the world"},
+                "feeling good":{"playlist_id":"1B9o7mER9kfxbmsRH9ko4z","artist":"spotify", "sentiment":"good"},
+                "great day":{"playlist_id":"2PXdUld4Ueio2pHcB6sM8j","artist":"spotify", "sentiment":"great"},
+                "good vibes":{"playlist_id":"3xgbBiNc7mh3erYsCl8Fwg", "artist":"spotify", "sentiment":"those good vibes"},
+                "breakup songs":{"playlist_id":"6dm9jZ2p8iGGTLre7nY4hf", "artist":"sonymusic", "sentiment":"sad"},
+                "stress buster":{"playlist_id":"6JC48D3eRvkUHACDtyu0Gs","artist":"spotify_uk_", "sentiment":"stressed"},
+                "life sucks":{"playlist_id":"5eSMIpsnkXJhXEPyRQCTSc", "artist":"spotify", "sentiment":"down"},
+                "badass":{"playlist_id":"3V1WI57CMyQdmxy3aibCB4", "artist":"spotify_uk_", "sentiment":"badass"},
+                "peaceful piano":{"playlist_id":"63dDpdoVHvx5RkK87g4LKk", "artist":"spotify", "sentiment":"peaceful"},
+                "brain food":{"playlist_id":"67nMZWgcUxNa5uaiyLDR2x", "artist":"spotify", "sentiment":"productive"},
+                "afternoon acoustic":{"playlist_id":"16BpjqQV1Ey0HeDueNDSYz", "artist":"spotify", "sentiment":"chilled"},
+                "tropical house":{"playlist_id":"5IqZyShbVqwR9GQ1FVmHCT","artist":"spotify_uk_", "sentiment":"upbeat"}}
 
     table_row = 1
     while True:
@@ -120,7 +120,7 @@ def main():
         if commit:
             sentiment = parseCommitMessage(commit[3])
             track_name = addSpotifyTrack(playlists[sentiment])
-            message = createSlackMessage(commit[1],sentiment, track_name)
+            message = createSlackMessage(commit[1],playlists[sentiment]["sentiment"], track_name)
             slackPost(message)
         table_row += 1
 
