@@ -282,5 +282,9 @@ def webhook():
 #         #return ''
 #     return ''
 
+@app.route("/spotifycallback", methods=["GET","POST"])
+def spotifycallback():
+    return ''
+
 if __name__ == '__main__':
     app.run(debug=True)
