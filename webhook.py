@@ -13,6 +13,8 @@ from sqlalchemy.dialects.postgresql import JSON
 from flask import make_response
 import urllib
 
+from spotifyconnect import spotifyConnect, addTrack, searchArtist, getArtistTrack
+
 #import spotify python api
 import spotipy
 import spotipy.util as util
@@ -256,9 +258,29 @@ def webhook():
         new_record = Commit(USERNAME, REPO, MESSAGE)#params: username,repo,message
         db.session.add(new_record)
         db.session.commit()
-
-
     return ''
+
+
+# @app.route("/spotifyrequest", methods=["GET","POST"])
+# def spotifyrequest():
+#
+#     json_data = request.data
+#     # if json_data['token'] == "jYmxefM3gQ7KsykEcTljri07":
+#     #     SEARCH_TERM = json_data['text'][10:]
+#     #     artist_id = searchArtist(SEARCH_TERM)
+#     #     if artist_id == False:
+#     #         return ''#do nothing
+#     #     token = spotifyConnect()
+#     #     track_info = getArtistTrack(artist_id,token)
+#     #     addTrack(track_info['uri'], token)
+#     #
+#     #     #set up call to slack webhook
+#     #     text = "Request from " + json_data['user_name'] + " approved!" + "New track on the playlist: " + track_info['name'] + " by " + track_info['artist']
+#     #     json_data={"channel":"#spotify", "text":text,"username":"SpotifyBot","icon_emoji": ":spotify:"}
+#     #     url = "https://hooks.slack.com/services/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"
+#
+#         #return ''
+#     return ''
 
 if __name__ == '__main__':
     app.run(debug=True)

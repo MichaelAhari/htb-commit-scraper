@@ -59,3 +59,34 @@ def addTrack(track_id, token):
     sp.trace = False
 
     request = sp.user_playlist_add_tracks(USER_ID, PLAYLIST_ID, TRACK_IDS)
+
+def searchArtist(search_term):
+    # #set up
+    # sp = spotipy.Spotify(auth=token)
+    # sp.trace = False
+    #
+    # result = sp.search(q=search_term, type="artist")
+    #
+    # if result.status_code == 204:
+    #     return False
+    # else:
+    #     artist_data = result['artists']['items'][0]
+    #     artist_id = artist_data['id']
+    #     return artist_id
+    return ''
+
+def getArtistTrack(artist_id,token):
+    # #set up
+    # sp = spotipy.Spotify(auth=token)
+    # sp.trace = False
+    #
+    # top_tracks = sp.artist_top_tracks(artist_id)
+    #
+    # track = top_tracks['tracks'][0]
+    #
+    # artist = track['artists'][0]['name']
+    # track_name = track['name']
+    # track_uri = track['uri']
+    #
+    # return {"name":track_name, "uri":track_uri, "artist":artist}
+    return ''
