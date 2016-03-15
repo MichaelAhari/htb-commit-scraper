@@ -11,7 +11,7 @@ os.environ['SPOTIPY_REDIRECT_URI']=('http://localhost:5000/spotifycallback').enc
 
 def spotifyConnect():
     username = 'michaelahari'
-    scope = 'playlist-modify-public'
+    scope = 'playlist-modify-private'
     token = util.prompt_for_user_token(username, scope)
     return token
 

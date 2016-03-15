@@ -65,6 +65,7 @@ def addSpotifyTrack(playlist_info):
     track = getTrack(playlist_info, token)
 
     track_uri = track['track']['uri']
+
     addTrack(track_uri, token)
 
     track_name = track['track']['name']
@@ -113,8 +114,9 @@ def main():
                 "afternoon acoustic":{"playlist_id":"16BpjqQV1Ey0HeDueNDSYz", "artist":"spotify", "sentiment":"chilled"},
                 "tropical house":{"playlist_id":"5IqZyShbVqwR9GQ1FVmHCT","artist":"spotify_uk_", "sentiment":"upbeat"}}
 
-    table_row = 1
+    table_row = 0
     while True:
+        table_row = table_row + 1
         time.sleep(5*60)
         commit = getCommit(table_row)
         if commit:
