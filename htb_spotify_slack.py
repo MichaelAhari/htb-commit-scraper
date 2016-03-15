@@ -122,7 +122,7 @@ def main():
             track_name = addSpotifyTrack(playlists[sentiment])
             message = createSlackMessage(commit[1],sentiment, track_name)
             slackPost(message)
-            table_row += 1
+        table_row += 1
 
 if __name__ == "__main__":
     main()
