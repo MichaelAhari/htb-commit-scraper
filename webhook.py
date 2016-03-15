@@ -164,7 +164,7 @@ def form():
             json_data = {"name": "web",
                             "active": True,
                             "events": ["push"],
-                            "config": {"url": "http://michaelahari.co.uk/webhook","content_type":"json", "insecure_ssl":1}}
+                            "config": {"url": "http://hacktheburgh.michaelahari.co.uk/webhook","content_type":"json", "insecure_ssl":1}}
 
 
             create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO),data=json.dumps(json_data))
@@ -246,7 +246,7 @@ def webhook():
 
         #set up call to slack webhook
         text = "*" + USERNAME + "* just pushed a commit to `" + REPO + "`: _\"" + MESSAGE + "\"_"
-        json_data={"text":text,"username":REPO,"icon_emoji": ":octocat"}
+        json_data={"text":text,"username":REPO,"icon_emoji": ":octocat:"}
         url = "https://hooks.slack.com/services/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" # hack the burgh group, #github channel
         #url = "https://hooks.slack.com/services/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"
 
