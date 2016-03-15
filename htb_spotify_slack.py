@@ -114,7 +114,7 @@ def main():
                 "tropical house":{"playlist_id":"5IqZyShbVqwR9GQ1FVmHCT","artist":"spotify_uk_"}}
 
     table_row = 1
-    while 1:
+    while True:
         time.sleep(5*60)
         commit = getCommit(table_row)
         if commit:
