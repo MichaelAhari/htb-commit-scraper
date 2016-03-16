@@ -261,26 +261,27 @@ def webhook():
     return ''
 
 
-# @app.route("/spotifyrequest", methods=["GET","POST"])
-# def spotifyrequest():
-#
-#     json_data = request.data
-#     # if json_data['token'] == "jYmxefM3gQ7KsykEcTljri07":
-#     #     SEARCH_TERM = json_data['text'][10:]
-#     #     artist_id = searchArtist(SEARCH_TERM)
-#     #     if artist_id == False:
-#     #         return ''#do nothing
-#     #     token = spotifyConnect()
-#     #     track_info = getArtistTrack(artist_id,token)
-#     #     addTrack(track_info['uri'], token)
-#     #
-#     #     #set up call to slack webhook
-#     #     text = "Request from " + json_data['user_name'] + " approved!" + "New track on the playlist: " + track_info['name'] + " by " + track_info['artist']
-#     #     json_data={"channel":"#spotify", "text":text,"username":"SpotifyBot","icon_emoji": ":spotify:"}
-#     #     url = "https://hooks.slack.com/services/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"
-#
-#         #return ''
-#     return ''
+@app.route("/spotifyrequest", methods=["GET","POST"])
+def spotifyrequest():
+
+    if request.form.get('token', 'nothing') == "jYmxefM3gQ7KsykEcTljri07":
+        SEARCH_TERM = request.form.get('text')[9:]
+        token = spotifyConnect()
+        artist_id = searchArtist(SEARCH_TERM)
+        if artist_id == False:
+            return ''#do nothing
+        track_info = getArtistTrack(artist_id,token)
+        addTrack(track_info['uri'], token)
+
+        #set up call to slack webhook
+        text = "Request from " + "@"+ request.form.get('user_name', 'nothing') + " approved!" + " New track on the playlist: " + track_info['name'] + " by " + track_info['artist']
+        json_data={"channel":"#spotify", "text":text,"username":"SpotifyBot","icon_emoji": ":spotify:"}
+        url = "https://hooks.slack.com/services/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"
+
+        post = requests.post(url, data=json.dumps(json_data))
+
+        return ''
+    return ''
 
 @app.route("/spotifycallback", methods=["GET","POST"])
 def spotifycallback():

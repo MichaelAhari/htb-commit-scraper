@@ -4,6 +4,8 @@ import os
 import json
 import requests
 from random import randint
+import urllib
+
 
 os.environ['SPOTIPY_CLIENT_ID']='8189ec06c3b842fe8328860ac9d55bc1'
 os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
@@ -61,32 +63,44 @@ def addTrack(track_id, token):
     request = sp.user_playlist_add_tracks(USER_ID, PLAYLIST_ID, TRACK_IDS)
 
 def searchArtist(search_term):
-    # #set up
-    # sp = spotipy.Spotify(auth=token)
-    # sp.trace = False
-    #
-    # result = sp.search(q=search_term, type="artist")
-    #
-    # if result.status_code == 204:
-    #     return False
-    # else:
-    #     artist_data = result['artists']['items'][0]
-    #     artist_id = artist_data['id']
-    #     return artist_id
+    #set up
+    url = "https://api.spotify.com/v1/search?q=" + urllib.quote(search_term, safe='') + "&type=artist"
+
+    result = requests.get(url)
+
+    if result.status_code == 204:
+        return False
+    else:
+        json_data = result.json()
+        print json_data
+        artist_data = json_data['artists']['items'][0]
+        artist_id = artist_data['id']
+        return artist_id
+
     return ''
 
 def getArtistTrack(artist_id,token):
-    # #set up
-    # sp = spotipy.Spotify(auth=token)
-    # sp.trace = False
-    #
-    # top_tracks = sp.artist_top_tracks(artist_id)
-    #
-    # track = top_tracks['tracks'][0]
-    #
-    # artist = track['artists'][0]['name']
-    # track_name = track['name']
-    # track_uri = track['uri']
-    #
-    # return {"name":track_name, "uri":track_uri, "artist":artist}
+    #set up
+    sp = spotipy.Spotify(auth=token)
+    sp.trace = False
+
+    top_tracks = sp.artist_top_tracks(artist_id)
+
+    tracks = top_tracks['tracks']
+
+    #get tracks already in our playlist
+    request = sp.user_playlist('michaelahari', playlist_id="0H8XxdGolLwGr45HVEU9Dm", fields="tracks")
+    current_tracks = request['tracks']['items']
+    print current_tracks
+
+    #check its not already in the playlist
+    item = 0
+    while tracks[item] in current_tracks:
+        item = item + 1
+
+    artist = tracks[item]['artists'][0]['name']
+    track_name = tracks[item]['name']
+    track_uri = tracks[item]['uri']
+
+    return {"name":track_name, "uri":track_uri, "artist":artist}
     return ''
