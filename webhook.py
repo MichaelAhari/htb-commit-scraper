@@ -248,9 +248,11 @@ def webhook():
         MESSAGE = json_data['head_commit']['message']
 
         tokens = MESSAGE.split()
-        for token in tokens:
-            if re.match(token.lower(), "[^!@#$%^&*]*(fuck|shit|cunt|dick|bitch)[^!@#$%^&*]*"):
-                token = "$%^&!"
+        for i in range(0, len(tokens)):
+            print tokens[i]
+            if re.match(".*(?=fuck|shit|cunt|dick|bitch).*$", tokens[i].lower()):
+                tokens[i] = ""
+                print tokens[i]
 
         MONITORED_MESSAGE = ' '.join(tokens)
         print ' '.join(tokens)
