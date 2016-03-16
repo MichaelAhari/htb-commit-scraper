@@ -93,10 +93,10 @@ def getArtistTrack(artist_id,token):
     current_tracks = request['tracks']['items']
     print current_tracks
 
-    #check its not already in the playlist
-    item = 0
+    item = randint(0,len(tracks)-1)
     while tracks[item] in current_tracks:
-        item = item + 1
+        item = randint(0,len(tracks)-1)
+
 
     artist = tracks[item]['artists'][0]['name']
     track_name = tracks[item]['name']
