@@ -19,6 +19,7 @@ from spotifyconnect import spotifyConnect, addTrack, searchArtist, getArtistTrac
 import spotipy
 import spotipy.util as util
 
+import re
 
 # create application
 app = Flask(__name__)
@@ -246,8 +247,16 @@ def webhook():
         REPO = json_data['repository']['name']
         MESSAGE = json_data['head_commit']['message']
 
+        tokens = MESSAGE.split()
+        for token in tokens:
+            if re.match(token.lower(), "[^!@#$%^&*]*(fuck|shit|cunt|dick|bitch)[^!@#$%^&*]*"):
+                token = "$%^&!"
+
+        MONITORED_MESSAGE = ' '.join(tokens)
+        print ' '.join(tokens)
+
         #set up call to slack webhook
-        text = "*" + USERNAME + "* just pushed a commit to `" + REPO + "`: _\"" + MESSAGE + "\"_"
+        text = "*" + USERNAME + "* just pushed a commit to `" + REPO + "`: _\"" + MONITORED_MESSAGE + "\"_"
         json_data={"text":text,"username":REPO,"icon_emoji": ":octocat:"}
         url = "https://hooks.slack.com/services/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" # hack the burgh group, #github channel
         #url = "https://hooks.slack.com/services/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"
