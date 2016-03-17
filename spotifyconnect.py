@@ -32,12 +32,8 @@ def getTrack(playlist_info, token):
     item = randint(0,len(tracks)-1)
 
     #get tracks already in our playlist
-    request = sp.user_playlist('michaelahari', playlist_id="0H8XxdGolLwGr45HVEU9Dm", fields="tracks")
-    current_tracks = request['tracks']['items']
-
-    #check its not already in the playlist
-    while tracks[item] in current_tracks:
-        item = randint(0,len(tracks)-1)
+    # request = sp.user_playlist('michaelahari', playlist_id="0H8XxdGolLwGr45HVEU9Dm", fields="tracks")
+    # current_tracks = request['tracks']['items']
 
     #return track
     return tracks[item]
@@ -89,18 +85,13 @@ def getArtistTrack(artist_id,token):
     tracks = top_tracks['tracks']
 
     #get tracks already in our playlist
-    request = sp.user_playlist('michaelahari', playlist_id="0H8XxdGolLwGr45HVEU9Dm", fields="tracks")
-    current_tracks = request['tracks']['items']
-    print current_tracks
+    # request = sp.user_playlist('michaelahari', playlist_id="0H8XxdGolLwGr45HVEU9Dm", fields="tracks")
+    # current_tracks = request['tracks']['items']
 
     item = randint(0,len(tracks)-1)
-    while tracks[item] in current_tracks:
-        item = randint(0,len(tracks)-1)
-
 
     artist = tracks[item]['artists'][0]['name']
     track_name = tracks[item]['name']
     track_uri = tracks[item]['uri']
 
     return {"name":track_name, "uri":track_uri, "artist":artist}
-    return ''
