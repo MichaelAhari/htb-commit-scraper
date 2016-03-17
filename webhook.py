@@ -285,7 +285,7 @@ def spotifyrequest():
         addTrack(track_info['uri'], token)
 
         #set up call to slack webhook
-        text = "Request from " + "@"+ request.form.get('user_name', 'nothing') + " approved!" + " New track on the playlist: " + track_info['name'] + " by " + track_info['artist']
+        text = "Request from " + "<@"+ request.form.get('user_name', 'nothing') + "> approved!" + " New track on the playlist: " + track_info['name'] + " by " + track_info['artist']
         json_data={"channel":"#spotify", "text":text,"username":"SpotifyBot","icon_emoji": ":spotify:"}
         url = "https://hooks.slack.com/services/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"
 
