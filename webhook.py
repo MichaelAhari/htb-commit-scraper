@@ -242,7 +242,7 @@ def valid():
 def webhook():
 
     if request.headers.get('X-GitHub-Event') == "push":
-            json_data = json.loads(request.data)
+        json_data = json.loads(request.data)
         USERNAME = json_data['head_commit']['author']['username']
         REPO = json_data['repository']['name']
         MESSAGE = json_data['head_commit']['message']
