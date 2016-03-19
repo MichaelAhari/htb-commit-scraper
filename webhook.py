@@ -167,7 +167,7 @@ def form():
             json_data = {"name": "web",
                             "active": True,
                             "events": ["push"],
-                            "config": {"url": "http://hacktheburgh.michaelahari.co.uk/webhook","content_type":"json", "insecure_ssl":1}}
+                            "config": {"url": "https://hacktheburgh.michaelahari.co.uk/webhook","content_type":"json"}}
 
 
             create_hook = github.post('https://api.github.com/repos/%s/%s/hooks' % (OWNER,REPO),data=json.dumps(json_data))
@@ -242,7 +242,7 @@ def valid():
 def webhook():
 
     if request.headers.get('X-GitHub-Event') == "push":
-        json_data = json.loads(request.data)
+            json_data = json.loads(request.data)
         USERNAME = json_data['head_commit']['author']['username']
         REPO = json_data['repository']['name']
         MESSAGE = json_data['head_commit']['message']
