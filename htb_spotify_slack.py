@@ -90,15 +90,15 @@ def slackPost(message):
 
     #set up call to slack webhook
     json_data={"channel": "#spotify", "text":message,"username":"SpotifyBot","icon_emoji": ":spotify:"}
-    url = "https://hooks.slack.com/services/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" # hack the burgh group, #spotify channel
-    #url = "https://hooks.slack.com/services/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"
+    url = "***" # hack the burgh group, #spotify channel
+    #url = "***"
 
     post = requests.post(url, data=json.dumps(json_data))
 
 def main():
     """Set up enviroment variables for spotify api"""
-    os.environ['SPOTIPY_CLIENT_ID']='8189ec06c3b842fe8328860ac9d55bc1'
-    os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
+    os.environ['SPOTIPY_CLIENT_ID']='***'
+    os.environ['SPOTIPY_CLIENT_SECRET']='***'
     os.environ['SPOTIPY_REDIRECT_URI']=('http://michaelahari.co.uk/spotifycallback').encode('utf-8')
 
     playlists = {"confidence boost":{"playlist_id": "0Vib1QAMtMaiywa3QSEq40","artist":"spotify","sentiment":"on top of the world"},
