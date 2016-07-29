@@ -45,8 +45,8 @@ class User(db.Model):
 db.create_all()
 
 
-client_id = "f9ba003f3e1eba4ff7f5"
-client_secret = "78dc535324b5e6fd8699748df2140f268147a8e4"
+client_id = "***"
+client_secret = "***"
 authorization_base_url = 'https://github.com/login/oauth/authorize'
 token_url = 'https://github.com/login/oauth/access_token'
 redirect_uri = 'http://michaelahari.co.uk/callback'
