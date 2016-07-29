@@ -7,8 +7,8 @@ from random import randint
 import urllib
 
 
-os.environ['SPOTIPY_CLIENT_ID']='8189ec06c3b842fe8328860ac9d55bc1'
-os.environ['SPOTIPY_CLIENT_SECRET']='3d850530b8524db6a8a406167d68cb1b'
+os.environ['SPOTIPY_CLIENT_ID']='***'
+os.environ['SPOTIPY_CLIENT_SECRET']='***'
 os.environ['SPOTIPY_REDIRECT_URI']=('http://localhost:5000/spotifycallback').encode('utf-8')
 
 def spotifyConnect():
