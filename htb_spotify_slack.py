@@ -13,7 +13,7 @@ import os
 from spotifyconnect import spotifyConnect, getTrack, addTrack
 
 def getCommit(table_row):
-    conn = psycopg2.connect(database="users", user="postgres", password="htbcommitscraper", host="178.62.99.27", port="5432")
+    conn = psycopg2.connect(database="***", user="***", password="***", host="***", port="***")
     cur = conn.cursor()
     cur.execute("SELECT * from gitcommits WHERE id=" + str(table_row))
     rows = cur.fetchall()
